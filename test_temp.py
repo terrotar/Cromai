@@ -1,21 +1,17 @@
 
 import tempfile
-
-temp = tempfile.NamedTemporaryFile()
-print(temp)
-print(temp.name)
+import time
+import os
+"""
+with tempfile.TemporaryDirectory(dir=".") as tmpdirname:
+    print('created temporary directory', tmpdirname)
+    time.sleep(10)
 
 
 """
-import tempfile
 
-arquivoTemporario = tempfile.TemporaryFile()
+PATH = tempfile.TemporaryDirectory()
 
-arquivoTemporario.write(b'qualquer coisa')
+teste = PATH
 
-arquivoTemporario.seek(0)
-
-print(str(arquivoTemporario.read(), encoding='utf8'))
-
-arquivoTemporario.close()
-"""
+print(PATH.name)
