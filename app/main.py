@@ -1,22 +1,11 @@
 
 from fastapi import FastAPI, File, UploadFile, HTTPException
 
-from fastapi.responses import FileResponse
+from fastapi.responses import FileResponse, JSONResponse
 
+from .schemas import Message
 
-import tempfile
-
-import shutil
-
-import os
-
-
-# Create temporary directory
-temp = tempfile.TemporaryDirectory()
-PATH = temp.name
-
-# Allowed extensions for files
-ALLOWED_EXTENSIONS = ['bmp']
+from . import crud
 
 
 # FastAPI instance
@@ -27,30 +16,67 @@ app = FastAPI()
 @app.post("/upload")
 async def upload(file: UploadFile = File(...)):
 
-    # Checks if the extension is allowed
-    check_file = file.filename.split('.')
-    if(check_file[-1] not in ALLOWED_EXTENSIONS):
-        raise HTTPException(status_code=415, detail="File extension must be .bmp")
+    # Save the file and moves it to temporary folder
+    crud.save_file(file)
 
-    try:
-        # Saves the file and move it to PATH
-        with open(file.filename, 'wb') as buffer:
-            shutil.copyfileobj(file.file, buffer)
-            shutil.move(file.filename, f"{PATH}/{file.filename}")
+    # Check if file's extension is allowed
+    check_extension = crud.check_extension(file.filename)
+    if(check_extension != "bmp"):
+        raise HTTPException(status_code=400,
+                            detail="Only extension .bmp is allowed")
 
-        # Checks if file was correctly saved
-        if(os.path.isfile(f"{PATH}/{file.filename}") is True):
-            return {"message": f"File {file.filename} saved in directory {PATH}"}
+    # Check if file was correctly saved
+    check_upload = crud.check_upload(file.filename)
+    if(check_upload is False):
+        raise HTTPException(status_code=400,
+                            detail="File not saved")
 
-    except Exception:
-        raise HTTPException(status_code=400, detail="File not saved")
+    return {"message": f"File {file.filename} was correctly uploaded"}
 
 
 # Get an image by its name
 @app.get("/get-image/{filename}")
-def get_image(filename: str):
-    filename = filename + ".bmp"
-    if(os.path.isfile(f"{PATH}/{filename}") is True):
-        return FileResponse(f"{PATH}/{filename}")
+def download_file(filename: str):
+
+    # Try to get file
+    file = crud.check_upload(filename)
+    if(file):
+        return FileResponse(file)
 
     raise HTTPException(status_code=400, detail=f"File {filename} not found")
+
+
+# White message on an image
+@app.post("/write-message-on-image", response_class=JSONResponse)
+async def write_message(message: Message):
+
+    # Try to get file
+    file = crud.check_upload(message.filename)
+    if(file):
+
+        # Get file and message's size
+        file_bytes = []
+
+        # Open image in bytes
+        img = open(file, "rb")
+        for i in list(bytes(img.read())):
+            i = format(i, '08b')
+            file_bytes.append(i)
+
+        # Open message in bytes
+        message_bytes = []
+        for i in list(bytes(message.message, 'ascii')):
+            i = format(i, '08b')
+            message_bytes.append(i)
+
+        return {
+            "file_bytes_qtd": f"{len(file_bytes)}",
+            "file_bytes": f"{file_bytes}",
+            "First_least_significant_bit": f"{list(file_bytes[0])[-1]}",
+            "message_bytes_qtd": f"{len(message_bytes)}",
+            "message_bytes": f"{message_bytes}"}
+
+        # with open(file, 'rb') as buffer:
+        #    return {"binary_image": f"{buffer.read()}"}
+    raise HTTPException(
+        status_code=400, detail=f"File {message.filename} not found")
