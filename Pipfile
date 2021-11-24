@@ -6,8 +6,7 @@ name = "pypi"
 [packages]
 fastapi = {extras = ["all"], version = "*"}
 python-multipart = "*"
-orjson = "*"
-pillow = "*"
+opencv-python = "*"
 
 [dev-packages]
 

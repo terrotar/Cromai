@@ -56,7 +56,7 @@ async def write_message(message: Message):
     file = crud.check_upload(message.filename)
     if(file):
 
-        filepath = crud.encode_message(filepath=file, message=message)
+        filepath = crud.encode_message(filepath=file, msg=message.message)
 
         if(crud.check_upload(filepath) is False):
             raise HTTPException(
@@ -69,3 +69,22 @@ async def write_message(message: Message):
     raise HTTPException(
         status_code=400,
         detail=f"File {message.filename} not found")
+
+
+@app.get("/decode-message-from-image/", response_class=JSONResponse)
+def read_message(filename: str):
+    # Check if filename has the prefix "new_"
+    check_prefix = filename.split("_")
+    if(check_prefix[0] != "new"):
+        raise HTTPException(
+            status_code=400,
+            detail=f"File {filename} doesn't have the prefix 'new_'.")
+
+    filepath = crud.check_upload(filename)
+    if(filepath):
+        secret_message = crud.decode_message(filepath=filepath)
+        return {"message": f"{secret_message}"}
+
+    raise HTTPException(
+            status_code=400,
+            detail=f"File {filename} not found")

@@ -3,11 +3,11 @@ from fastapi import File
 
 from .settings import PATH, ALLOWED_EXTENSIONS
 
-from PIL import BmpImagePlugin
-
 import imghdr
 
 import shutil
+
+import cv2
 
 import os
 
@@ -52,68 +52,85 @@ def save_file(file: File(...)):
 
 # Create new_img with message
 # Get file's bytes
-def encode_message(filepath: str, message: str):
-    file_bytes = []
-    img = open(filepath, "rb")
-    for i in list(bytes(img.read())):
-        # i = format(i, '08b')
-        file_bytes.append(i)
+
+def to_bit_generator(message: str):
+    # Converts a message into a generator which returns
+    # 1 bit of the message each time.
+    for c in (message):
+        o = ord(c)
+        for i in range(8):
+            yield (o & (1 << i)) >> i
+
+
+def encode_message(filepath: str, msg: str):
 
     # Set a dot(.) in the final of message
-    set_dot = list(message.message)
+    set_dot = list(msg)
     if(set_dot[-1] != "."):
-        message.message = message.message + "."
+        msg = msg + "."
 
-    # Get message's bytes
-    message_bytes = []
-    for i in list(bytes(message.message, 'ascii')):
-        i = format(i, '08b')
-        message_bytes.append(i)
+    # Create a generator for the hidden message
+    hidden_message = to_bit_generator(msg)
 
-    # Split message in bits
-    message_bits = []
-    for byte in message_bytes:
-        byte = list(byte)
-        for i in byte:
-            message_bits.append(i)
-
-    # Encode the message's bits with file_bytes
-    new_img = []
-    pos = 0
-    for img_byte in file_bytes:
-        # Copy some initial bytes
-        # Keeps the same header and also set
-        # an index to decode after
-        if(img_byte in file_bytes[0:10]):
-            new_img.append(img_byte)
-        else:
-            if(pos < len(message_bits)):
-
-                # Discard the LSB of first fyle byte
-                img_byte = img_byte >> 1
-
-                # Add message bit
-                message_bit = int(message_bits[pos])
-                img_byte = img_byte << 1 | message_bit
-                new_img.append(img_byte)
-                pos += 1
-            else:
-                # Copy the rest of file bytes
-                new_img.append(img_byte)
-                pos += 1
-
-    # Set new_img to image and saves it in temporary folder
-    # with prefix = "new_"
-    input_image = BmpImagePlugin.BmpImageFile(filepath)
-    output_image = input_image.copy()
-    output_image.frombytes(bytes(new_img))
-
-    # file is a pathlike
+    # Read the original image
+    img = cv2.imread(filepath, cv2.IMREAD_GRAYSCALE)
+    for h in range(len(img)):
+        for w in range(len(img[0])-1):
+            # Write the hidden message into the least significant bit
+            try:
+                img[h][w] = (img[h][w] & ~1) | next(hidden_message)
+            except Exception:
+                pass
+    # Write out the image with hidden message
     filepath = filepath.split(".")
     filepath = filepath[0].split("/")
 
     # Save new_img in temporary folder
     new_img_path = f"{PATH}/new_{filepath[-1]}.bmp"
-    output_image.save(f"{new_img_path}")
+    cv2.imwrite(new_img_path, img)
 
     return f"new_{filepath[-1]}"
+
+
+def decode_message(filepath: str):
+
+    # Open image with message encoded
+    img = cv2.imread(filepath, cv2.IMREAD_GRAYSCALE)
+    i = 0
+    bits = ''
+    chars = []
+    for row in img:
+        for pixel in row:
+            bits = str(pixel & 0x01) + bits
+            i += 1
+            if(i == 8):
+                chars.append(chr(int(bits, 2)))
+                i = 0
+                bits = ''
+
+    # Generate a list with message's chars in utf-8
+    secret_message = []
+    for char in chars:
+        char = char.encode('utf-8')
+        if(len(secret_message) < 1):
+            secret_message.append(char)
+        else:
+            if(secret_message[-1] != "."):
+                if(char.isascii() is True):
+                    secret_message.append(char)
+                else:
+                    secret_message.append(".")
+                    break
+            else:
+                break
+
+    # Format encoded message
+    message = ''
+    for letter in secret_message:
+        message += str(letter)
+    test = ''
+    message = message.split("'b'")
+    for letter in message:
+        test += letter
+
+    return test[2:-2]
