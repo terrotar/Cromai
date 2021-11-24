@@ -42,18 +42,20 @@ Há também o arquivo "curl_api.txt" dentro do diretório "/Documents" com as li
 
 Se desejar, também é possível utilizar diretamente no navegador as rotas da API a partir da URI http://127.0.0.1:8000 :
 
-- /upload
+- <a href="http://127.0.0.1:8000/upload">/upload</a>
 
     POST para enviar uma imagem bitmap no formato "multipart/form-data" e retorna a confirmação do upload do arquivo.
 
-- /get-image
+- <a href="http://127.0.0.1:8000/get-image">/get-image</a>
 
     GET que envia uma variável "filename" na query contendo o nome do arquivo e retorna a imagem caso ela seja encontrada.
 
-- /write-message-on-image
+- <a href="http://127.0.0.1:8000/write-message-on-image">/write-message-on-image</a>
+
     POST que envia um "application/json" com os campos "filename" e "message" e retorna o nome da nova imagem(igual ao nome anterior mas com prefix="new_") com a mensagem esteganografada.
 
-- /decode-message-from-image
+- <a href="http://127.0.0.1:8000/decode-message-from-image">/decode-message-from-image</a>
+
     GET que envia uma variável "filename" na query contendo o nome do arquivo e retorna a mensagem caso ela seja encontrada.
 
 
