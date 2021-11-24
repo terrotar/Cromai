@@ -73,7 +73,7 @@ async def write_message(message: Message):
 
 
 # Decode image's message
-@app.get("/decode-message-from-image/", response_class=JSONResponse)
+@app.get("/decode-message-from-image", response_class=JSONResponse)
 def read_message(filename: str):
 
     # Check if filename has the prefix "new_"
