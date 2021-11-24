@@ -48,7 +48,7 @@ def download_file(filename: str):
         detail=f"File {filename} not found")
 
 
-# White message on an image
+# Encode a message in image
 @app.post("/write-message-on-image", response_class=JSONResponse)
 async def write_message(message: Message):
 
@@ -56,23 +56,26 @@ async def write_message(message: Message):
     file = crud.check_upload(message.filename)
     if(file):
 
+        # Encode message
         filepath = crud.encode_message(filepath=file, msg=message.message)
 
+        # Check if file was encoded
         if(crud.check_upload(filepath) is False):
             raise HTTPException(
                 status_code=400,
                 detail={"Error": f"File {message.filename} not encoded"})
 
         return {"new_file": f"{filepath}"}
-        # return FileResponse(new_img_path)
 
     raise HTTPException(
         status_code=400,
         detail=f"File {message.filename} not found")
 
 
+# Decode image's message
 @app.get("/decode-message-from-image/", response_class=JSONResponse)
 def read_message(filename: str):
+
     # Check if filename has the prefix "new_"
     check_prefix = filename.split("_")
     if(check_prefix[0] != "new"):
@@ -80,6 +83,7 @@ def read_message(filename: str):
             status_code=400,
             detail=f"File {filename} doesn't have the prefix 'new_'.")
 
+    # Check file and get decoded message
     filepath = crud.check_upload(filename)
     if(filepath):
         secret_message = crud.decode_message(filepath=filepath)

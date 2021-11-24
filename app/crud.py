@@ -33,6 +33,7 @@ def check_upload(filename: str):
     if(check_name[-1] != "bmp"):
         filename = filename + ".bmp"
 
+    # Check if file's in temporary folder
     file_path = f"{PATH}/{filename}"
     if(os.path.isfile(file_path) is True):
         return file_path
@@ -50,18 +51,16 @@ def save_file(file: File(...)):
         shutil.move(file.filename, file_path)
 
 
-# Create new_img with message
-# Get file's bytes
-
+# Converts a message into a generator which returns
+# 1 bit of the message each time.
 def to_bit_generator(message: str):
-    # Converts a message into a generator which returns
-    # 1 bit of the message each time.
     for c in (message):
         o = ord(c)
         for i in range(8):
             yield (o & (1 << i)) >> i
 
 
+# Encode a message in image
 def encode_message(filepath: str, msg: str):
 
     # Set a dot(.) in the final of message
@@ -92,6 +91,7 @@ def encode_message(filepath: str, msg: str):
     return f"new_{filepath[-1]}"
 
 
+# Decode image's message
 def decode_message(filepath: str):
 
     # Open image with message encoded
