@@ -54,8 +54,12 @@ def save_file(file: File(...)):
 # Converts a message into a generator which returns
 # 1 bit of the message each time.
 def to_bit_generator(message: str):
+
+    # Get byte's decimal
     for c in (message):
         o = ord(c)
+
+        # Generate bits
         for i in range(8):
             yield (o & (1 << i)) >> i
 
