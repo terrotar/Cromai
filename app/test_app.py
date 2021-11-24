@@ -42,7 +42,7 @@ def test_success_get_image():
     files = {'file': open('./imgs/cat_02.bmp', 'rb')}
     response = client.post(url, files=files)
 
-    url = 'http://127.0.0.1:8000/get-image/cat_02'
+    url = 'http://127.0.0.1:8000/get-image?filename=cat_02'
     response = client.get(url)
 
     assert response.status_code == 200
@@ -50,7 +50,7 @@ def test_success_get_image():
 
 # Image not found
 def test_image_not_found():
-    url = 'http://127.0.0.1:8000/get-image/cat_03'
+    url = 'http://127.0.0.1:8000/get-image/?filename=cat_03'
     response = client.get(url)
 
     assert response.status_code == 400

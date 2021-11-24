@@ -35,7 +35,7 @@ async def upload(file: UploadFile = File(...)):
 
 
 # Get an image by its name
-@app.get("/get-image/{filename}")
+@app.get("/get-image", response_class=FileResponse)
 def download_file(filename: str):
 
     # Try to get file
