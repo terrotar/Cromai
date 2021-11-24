@@ -67,3 +67,20 @@ Para rodar os testes é necessário iniciar o server(uvicorn) antes, ou o "Clien
 
 Com isso, basta estar localizado DENTRO da pasta da APLICAÇÃO("cromai/app/") e rodar o seguinte comando no terminal:
 - <code>pytest</code>
+
+
+## Sobre
+
+O desafio foi realizado buscando seguir as exigências do Case localizado na pasta "/Documents". Foi extremamente desafiador realizar esse projeto, principalmente pelo fato de eu nunca ter manipulado imagens ou outros arquivos em nível de bytes e bits. O tema do desafio foi muito legal como esperado da Cromai, o que novamente me auxiliou e incentivou durante todo meu processo de desenvolvimento, assim como meus dois gatos fazendo bagunça durante o andamento da aplicação.
+
+A esteganografia é um método relativamente simples e com um poder muito alto, fiquei impressionado com o resultado das imagens com as mensagens embutidas. Tive grande dificuldade na parte de inserir e retirar as mensagens secretas, tendo um longo tempo ai de muitos testes e "brincadeiras" com as manipulações de bytes/bits. Conforme os dias foram passando fui me familiarizando cada vez mais com o formato da proposta do desafio, tendo conseguido realizar de fato o resultado que desejava na madrugada do ultimo dia. Esse em dúvida nenhuma foi o teste mais difícil e de fé que tive desde o início de meus estudos, a persistência de continuar tentando acho que foi o que mais obtive de valor ao finalizar o teste.
+
+Estou estudando há algum tempo o FastAPI, um framework que gostei muito do formato e proposta dele e decidi por deenvolver utilizando o mesmo pois além de suas funcionalidades serem muito eficientes e claras, ainda vem com o bônus incrível de ter duas opções de swagger e todo código implementado segundo o OpenAPI. Poderia ter explorado mais ainda o framework usando e abusando das funções <code>async</code> mas por conta do tempo que demorei para completar os requisitos do desafio não consegui fazer essas implementações.
+
+As imagens foram transformadas em escala cinza para uma melhor e mais fácil decodificação das mensagens embutidas. Além disso, em todas imagens geradas com mensagens foi adicionado o prefixo "new_", facilitando e padronizando assim as imagens alteradas das originais. Todos os arquivos são salvos em um diretório temporário criado a cada vez que o server é iniciado e deletado toda vez em que é encerrado, garantindo assim que nenhuma imagem e/ou mensagem fique armazenada como a proposta do Case.
+
+Os testes realizados não são muitos mas eles contemplam toda a aplicação na sua totalidade, com testes bem sucedidos e mal-sucedidos, inputs corretos e errados.
+
+Muito obrigado pela oportunidade de poder participar novamente de outro processo seletivo da Cromai, e pelo mais divertido background de desafio que já existiu. Cresci e me aprimorei muito com o teste e fiquei muito feliz com o resultado obtido.
+
+Viva a revolução contra a ditadura dos gatos!
