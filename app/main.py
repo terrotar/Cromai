@@ -22,7 +22,7 @@ async def upload(file: UploadFile = File(...)):
     # Check if file's extension is allowed
     check_extension = crud.check_extension(file.filename)
     if(check_extension != "bmp"):
-        raise HTTPException(status_code=400,
+        raise HTTPException(status_code=422,
                             detail="Only extension .bmp is allowed")
 
     # Check if file was correctly saved
