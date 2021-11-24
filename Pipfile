@@ -7,8 +7,8 @@ name = "pypi"
 fastapi = {extras = ["all"], version = "*"}
 python-multipart = "*"
 opencv-python = "*"
-requests = "*"
 pytest = "*"
+requests = "*"
 
 [dev-packages]
 

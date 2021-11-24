@@ -1,0 +1,92 @@
+
+
+# Routes #
+
+
+## /upload ##
+
+
+### Valid bitmap image
+
+curl -X 'POST' \
+  'http://127.0.0.1:8000/upload' \
+  -H 'accept: application/json' \
+  -H 'Content-Type: multipart/form-data' \
+  -F 'file=@imgs/cat_01.bmp;type=image/bmp'
+
+
+### Invalid extension
+
+curl -X 'POST' \
+  'http://127.0.0.1:8000/upload' \
+  -H 'accept: application/json' \
+  -H 'Content-Type: multipart/form-data' \
+  -F 'file=@imgs/cat_not_bitmap.jpg;type=image/bmp'
+
+
+## /write-message-on-image ##
+
+
+### Sucess encode message
+
+curl -X 'POST' \
+  'http://127.0.0.1:8000/write-message-on-image' \
+  -H 'accept: application/json' \
+  -H 'Content-Type: application/json' \
+  -d '{
+  "filename": "cat_01",
+  "message": "Mensagem secreta"
+}'
+
+
+### filename not found
+
+curl -X 'POST' \
+  'http://127.0.0.1:8000/write-message-on-image' \
+  -H 'accept: application/json' \
+  -H 'Content-Type: application/json' \
+  -d '{
+  "filename": "cat_not_bitmap",
+  "message": "Mensagem secreta"
+}'
+
+
+## /get-image/{filename} ##
+
+
+### Sucess Read image
+
+curl -X 'GET' \
+  'http://127.0.0.1:8000/get-image/new_cat_01' \
+  -H 'accept: application/json' --output curl_new_cat_01.bmp
+
+
+### Image not found
+
+curl -X 'GET' \
+  'http://127.0.0.1:8000/get-image/cat_not_bitmap' \
+  -H 'accept: application/json'
+
+
+## /decode-message-from-image ##
+
+
+### Success decode image's message
+
+curl -X 'GET' \
+  'http://127.0.0.1:8000/decode-message-from-image?filename=new_cat_01' \
+  -H 'accept: application/json'
+
+
+### file without prefix new_
+
+curl -X 'GET' \
+  'http://127.0.0.1:8000/decode-message-from-image?filename=cat_01' \
+  -H 'accept: application/json'
+
+
+### Image not found
+
+curl -X 'GET' \
+  'http://127.0.0.1:8000/decode-message-from-image?filename=new_cat_not_bitmap' \
+  -H 'accept: application/json'
