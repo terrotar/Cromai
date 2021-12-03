@@ -1,7 +1,7 @@
 
 from fastapi import FastAPI, File, UploadFile, HTTPException
 
-from fastapi.responses import FileResponse, JSONResponse
+from fastapi.responses import FileResponse, JSONResponse, RedirectResponse
 
 from .schemas import Message
 
@@ -10,6 +10,11 @@ from . import crud
 
 # FastAPI instance
 app = FastAPI()
+
+
+@ app.get("/")
+def index_docs():
+    return RedirectResponse(url="/docs")
 
 
 # Upload a file
