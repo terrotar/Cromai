@@ -88,6 +88,11 @@ Viva a revolução contra a ditadura dos gatos!
 
 ---
 
+# Heroku
+
+O projeto foi subido para o Heroku no link <link>https://cromaistegano.herokuapp.com</link>
+
+
 # Docker
 
-Adicionado Dockerfile e publicado o container com nome cromaistegano o qual pode ser encontrado no DockerHub https://hub.docker.com/.
+Adicionado Dockerfile e publicado o container com nome <strong>cromaistegano</strong> o qual pode ser encontrado no DockerHub https://hub.docker.com/.
