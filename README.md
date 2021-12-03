@@ -84,3 +84,11 @@ Os testes realizados não são muitos mas eles contemplam toda a aplicação na 
 Muito obrigado pela oportunidade de poder participar novamente de outro processo seletivo da Cromai, e pelo mais divertido background de desafio que já existiu. Cresci e me aprimorei muito com o teste e fiquei muito feliz com o resultado obtido.
 
 Viva a revolução contra a ditadura dos gatos!
+
+
+---
+
+# Docker
+
+Adicionado Dockerfile e publicado o container com nome cromaistegano o qual pode ser encontrado no DockerHub https://hub.docker.com/.
+
