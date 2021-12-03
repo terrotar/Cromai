@@ -91,4 +91,3 @@ Viva a revolução contra a ditadura dos gatos!
 # Docker
 
 Adicionado Dockerfile e publicado o container com nome cromaistegano o qual pode ser encontrado no DockerHub https://hub.docker.com/.
-
