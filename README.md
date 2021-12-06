@@ -95,4 +95,5 @@ O projeto foi subido para o Heroku no link <link>https://cromaistegano.herokuapp
 
 # Docker
 
-Adicionado Dockerfile e publicado o container com nome <strong>cromaistegano</strong> o qual pode ser encontrado no DockerHub https://hub.docker.com/.
+Adicionado Dockerfile e publicado o container com nome <strong>cromaistegano</strong> o qual pode ser encontrado no DockerHub https://hub.docker.com/ e utilizado através do comando:
+- docker pull terrotar/cromaistegano:version1
