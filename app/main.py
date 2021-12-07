@@ -12,7 +12,7 @@ from . import crud
 app = FastAPI()
 
 
-@ app.get("/")
+@app.get("/")
 def index_docs():
     return RedirectResponse(url="/docs")
 
